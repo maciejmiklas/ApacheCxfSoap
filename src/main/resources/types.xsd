@@ -1,0 +1,33 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0">
+    <xs:simpleType name="email">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="256"/>
+            <xs:minLength value="5"/>
+            <xs:pattern
+                    value="([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})"></xs:pattern>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="phone">
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="25" />
+            <xs:minLength value="4" />
+            <xs:pattern value="[0-9 ]+"></xs:pattern>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="age">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"></xs:minInclusive>
+            <xs:maxInclusive value="120"></xs:maxInclusive>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="code">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="0"></xs:minInclusive>
+            <xs:maxInclusive value="99999"></xs:maxInclusive>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
