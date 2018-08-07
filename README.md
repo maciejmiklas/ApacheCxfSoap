@@ -9,13 +9,12 @@ For me the perfect solution would be, to write Java Code, put some annotations o
 I've tried few Java frameworks and all provide a way to generate WSLD out of Java code, but all of them are missing one fundamental future: you are unable to provide XSD for data types. So it's not possible to specify content of email field, or provide format for a date. We are getting only a half of a possible functionality of an WSDL: method calls, exception handling, documentation and security but there is no way to specify data fromat.<br />
 I would like to have a WSLD that is as tight as possible, so that the client can call particular method and will exactly know what is possible and what is not allowed.<br />
 <br />
-Let's start with standard SOAP Service generated out of Java code. We will use Apache CXF and Spring Boot for it. Source code is here:&nbsp;https://github.com/maciejmiklas/apache-cxf-soap<br />
+Let's start with standard SOAP Service generated out of Java code. We will use Apache CXF and Spring Boot for it. Source code is here: https://github.com/maciejmiklas/apache-cxf-soap/tree/master/src/main/java/org/ast/apachecxfsoap/orginal<br />
 <br />
-It's a simple application, where users can submit registration as a SOAP Request on: http://localhost:8080/soap/Registration:<br />
-{% gist f6facf99e874c75b3f819f5dfa7f5d5d %}
+It's a simple application, where users can submit registration as a SOAP Request on: http://localhost:8080/soap/Registration
 <br />
 This code outpost following WSDL:<br />
-{% gist 45e234e0b626fca359203fa0c4a4e165 %}
+https://github.com/maciejmiklas/apache-cxf-soap/tree/master/wsdl/orginal.wsdl
 Now as you can see, there is not much about data types in this WSDL (lines 9-22). Email is just mandatory, date also, but there is no way to provide further assertions.<br />
 The problem lies in JAXB, it's just missing annotations to influence generated XML Schema.<br />
 There is a <a href="https://github.com/whummer/jaxb-facets">pull request (jaxb-facets) </a>that would solve this issue but it's already few years old and it does not look like it's going to be integrated any time soon.<br />
@@ -30,7 +29,7 @@ The implementation below has its limitations, you might run into some issues, it
 <br />
 Now we are going to modify first example. The idea is to write XSD that defines simple types, reference those types in transfer classes, and on the end generate WSLD which combines it all.<br />
 For the beginning we have to write Schema that defines types for transfer objects:
-{% gist 37521bd96b4b1e2200efb2576e034c20 %}
+https://github.com/maciejmiklas/apache-cxf-soap/tree/master/src/main/resources/types.xsd
 The original source code will be modified only it a few places:
 <br />
 <ul>
@@ -38,6 +37,6 @@ The original source code will be modified only it a few places:
 <li>some fields in transfer objects are annotated with&nbsp;<i>@XmlSchemaType</i>&nbsp;- this annotations provides connection between Java types and types defined in XSD. For example&nbsp;<i>ExRegistration#email</i>&nbsp;is annotated with&nbsp;<i>@XmlSchemaType(name = "email")</i>, XSD contains&nbsp;<i>email</i>&nbsp;type, and finally&nbsp;<i>email</i>&nbsp;in generated in WSDL references type from provided Schema.,</li>
 <li>the classes following pattern <i>*Registration*</i> has been renamed to <i>*ExRegistration*</i></li>
 </ul>
-{% gist cd2f80300a80f9124a3d9f61914ad084 %}
+https://github.com/maciejmiklas/apache-cxf-soap/tree/master/src/main/java/org/ast/apachecxfsoap/extended
 Here is our final WSDL:
-{% gist 8276775d6a47cc7382fb1346f11de6a6 %}
+https://github.com/maciejmiklas/apache-cxf-soap/tree/master/wsdl/extended.wsdl

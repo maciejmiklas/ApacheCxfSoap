@@ -1,0 +1,94 @@
+
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://extended.apachecxfsoap.ast.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="exRegistration" targetNamespace="http://extended.apachecxfsoap.ast.org/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://extended.apachecxfsoap.ast.org/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://extended.apachecxfsoap.ast.org/">
+            <xs:element name="exRegistration" type="tns:exRegistration"/>
+            <xs:element name="register" type="tns:register"/>
+            <xs:element name="registerResponse" type="tns:registerResponse"/>
+            <xs:complexType name="register">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="tns:exRegistration"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="exRegistration">
+                <xs:sequence>
+                    <xs:element name="email" type="tns:email"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element minOccurs="0" name="phone" type="tns:phone"/>
+                    <xs:element minOccurs="0" name="age" type="tns:age"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="registerResponse">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:simpleType name="email">
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="256"/>
+                    <xs:minLength value="5"/>
+                    <xs:pattern value="([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="phone">
+                <xs:restriction base="xs:string">
+                    <xs:maxLength value="25"/>
+                    <xs:minLength value="4"/>
+                    <xs:pattern value="[0-9 ]+"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="age">
+                <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="0"/>
+                    <xs:maxInclusive value="120"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:element name="AlreadyRegisteredException" type="tns:AlreadyRegisteredException"/>
+            <xs:complexType name="AlreadyRegisteredException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="message" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="registerResponse">
+        <wsdl:part element="tns:registerResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="AlreadyRegisteredException">
+        <wsdl:part element="tns:AlreadyRegisteredException" name="AlreadyRegisteredException">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="register">
+        <wsdl:part element="tns:register" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="ExRegistrationService">
+        <wsdl:operation name="register">
+            <wsdl:input message="tns:register" name="register">
+            </wsdl:input>
+            <wsdl:output message="tns:registerResponse" name="registerResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:AlreadyRegisteredException" name="AlreadyRegisteredException">
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="exRegistrationSoapBinding" type="tns:ExRegistrationService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="register">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="register">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="registerResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AlreadyRegisteredException">
+                <soap:fault name="AlreadyRegisteredException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="exRegistration">
+        <wsdl:port binding="tns:exRegistrationSoapBinding" name="ExRegistrationServicePort">
+            <soap:address location="http://localhost:8080/soap/ExRegistration"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,72 @@
+
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://orginal.apachecxfsoap.ast.org/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="registration" targetNamespace="http://orginal.apachecxfsoap.ast.org/">
+    <wsdl:types>
+        <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://orginal.apachecxfsoap.ast.org/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://orginal.apachecxfsoap.ast.org/">
+            <xs:element name="register" type="tns:register"/>
+            <xs:element name="registerResponse" type="tns:registerResponse"/>
+            <xs:element name="registration" type="tns:registration"/>
+            <xs:complexType name="register">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="arg0" type="tns:registration"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="registration">
+                <xs:sequence>
+                    <xs:element name="email" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="registerResponse">
+                <xs:sequence/>
+            </xs:complexType>
+            <xs:element name="AlreadyRegisteredException" type="tns:AlreadyRegisteredException"/>
+            <xs:complexType name="AlreadyRegisteredException">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="message" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="registerResponse">
+        <wsdl:part element="tns:registerResponse" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="AlreadyRegisteredException">
+        <wsdl:part element="tns:AlreadyRegisteredException" name="AlreadyRegisteredException">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="register">
+        <wsdl:part element="tns:register" name="parameters">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="RegistrationService">
+        <wsdl:operation name="register">
+            <wsdl:input message="tns:register" name="register">
+            </wsdl:input>
+            <wsdl:output message="tns:registerResponse" name="registerResponse">
+            </wsdl:output>
+            <wsdl:fault message="tns:AlreadyRegisteredException" name="AlreadyRegisteredException">
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="registrationSoapBinding" type="tns:RegistrationService">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="register">
+            <soap:operation soapAction="" style="document"/>
+            <wsdl:input name="register">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="registerResponse">
+                <soap:body use="literal"/>
+            </wsdl:output>
+            <wsdl:fault name="AlreadyRegisteredException">
+                <soap:fault name="AlreadyRegisteredException" use="literal"/>
+            </wsdl:fault>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="registration">
+        <wsdl:port binding="tns:registrationSoapBinding" name="RegistrationServicePort">
+            <soap:address location="http://localhost:8080/soap/Registration"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
