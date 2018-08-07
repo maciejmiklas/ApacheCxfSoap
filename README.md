@@ -12,10 +12,10 @@ I would like to have a WSLD that is as tight as possible, so that the client can
 Let's start with standard SOAP Service generated out of Java code. We will use Apache CXF and Spring Boot for it. Source code is here:&nbsp;https://github.com/maciejmiklas/apache-cxf-soap<br />
 <br />
 It's a simple application, where users can submit registration as a SOAP Request on: http://localhost:8080/soap/Registration:<br />
-<script src="https://gist.github.com/maciejmiklas/f6facf99e874c75b3f819f5dfa7f5d5d.js"></script><br />
+{% gist f6facf99e874c75b3f819f5dfa7f5d5d %}
 <br />
 This code outpost following WSDL:<br />
-<script src="https://gist.github.com/maciejmiklas/45e234e0b626fca359203fa0c4a4e165.js"></script>
+{% gist 45e234e0b626fca359203fa0c4a4e165 %}
 Now as you can see, there is not much about data types in this WSDL (lines 9-22). Email is just mandatory, date also, but there is no way to provide further assertions.<br />
 The problem lies in JAXB, it's just missing annotations to influence generated XML Schema.<br />
 There is a <a href="https://github.com/whummer/jaxb-facets">pull request (jaxb-facets) </a>that would solve this issue but it's already few years old and it does not look like it's going to be integrated any time soon.<br />
@@ -30,7 +30,7 @@ The implementation below has its limitations, you might run into some issues, it
 <br />
 Now we are going to modify first example. The idea is to write XSD that defines simple types, reference those types in transfer classes, and on the end generate WSLD which combines it all.<br />
 For the beginning we have to write Schema that defines types for transfer objects:
-<script src="https://gist.github.com/maciejmiklas/37521bd96b4b1e2200efb2576e034c20.js"></script>
+{% gist 37521bd96b4b1e2200efb2576e034c20 %}
 The original source code will be modified only it a few places:
 <br />
 <ul>
@@ -38,6 +38,6 @@ The original source code will be modified only it a few places:
 <li>some fields in transfer objects are annotated with&nbsp;<i>@XmlSchemaType</i>&nbsp;- this annotations provides connection between Java types and types defined in XSD. For example&nbsp;<i>ExRegistration#email</i>&nbsp;is annotated with&nbsp;<i>@XmlSchemaType(name = "email")</i>, XSD contains&nbsp;<i>email</i>&nbsp;type, and finally&nbsp;<i>email</i>&nbsp;in generated in WSDL references type from provided Schema.,</li>
 <li>the classes following pattern <i>*Registration*</i> has been renamed to <i>*ExRegistration*</i></li>
 </ul>
-<script src="https://gist.github.com/maciejmiklas/cd2f80300a80f9124a3d9f61914ad084.js"></script>
+{% gist cd2f80300a80f9124a3d9f61914ad084 %}
 Here is our final WSDL:
-<script src="https://gist.github.com/maciejmiklas/8276775d6a47cc7382fb1346f11de6a6.js"></script>
+{% gist 8276775d6a47cc7382fb1346f11de6a6 %}
