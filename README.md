@@ -1,23 +1,23 @@
-SOAP is not very popular these days, mostly because of almost non human readable WSDL and protocol that puts a lot of overhead into a simple message. It's rally hard to just fire a message using browser or curl. Not mentioning the fact, that we have to get WSDL somehow
-But on the other had side SOAP has some advantages over REST. It gives us possibility to define contract and precisely specify the data that it will process. Once you have such WSLD you can throw it over the hedge and you do not have answer a questions like: how do I delete created resource, what means 403 in this case, or it this call idempotent ?<br />
-WSLD contains everything that is needed to define an RPC interface and to document it. I personally would go for REST for most of the cases, but still there are good a use cases for SOAP.<br />
+SOAP is not very popular these days, mostly because of almost non human readable WSDL and protocol that puts a lot of overhead into a simple message. It's rally hard to just fire a message using browser or curl. Not mentioning the fact, that we have to get WSDL somehow.
+
+But on the other had side SOAP has some advantages over REST. It gives us possibility to define contract and precisely specify the data that it will process. Once you have such WSLD you can throw it over the hedge and you do not have answer questions like: how do I delete created resource, what means 403 in this case, or it this call idempotent ?<br />
+WSLD contains everything that is needed to define an RPC interface and to document it. I personally would choose REST for most of the cases, but still there are good a use cases for SOAP.<br />
 <br />
-There is this one thing that I really do not like about SOAP: how do I get right WSLD? Should I use some tool to generate it, or maybe just write it? Honestly.... i really do not want to dig into SOAP to just write WSLD, and I do not want to spend hours playing around with some tools generating WSLD, importing it into my project, binding generated stuff to real implementation only to find out on the end that it does not behave as expected.<br />
+There is this one thing that is bothering me about SOAP: how do I get right WSLD? Should I use some tool to generate it, or maybe just write it? Honestly.... i really do not want to dig into SOAP to just write WSLD, and I do not want to spend hours playing around with some tools generating WSLD, importing it into my project, binding generated stuff to real implementation only to find out on the end that it does not behave as expected.<br />
 <br />
 For me the perfect solution would be, to write Java Code, put some annotations on it and generate WSDL out of it. Those annotations should provide enough flexibility to influence WSLD generation so that we can get something that can be delivered to the customers.<br />
 <br />
 I've tried few Java frameworks and all provide a way to generate WSLD out of Java code, but all of them are missing one fundamental future: you are unable to provide XSD for data types. So it's not possible to specify content of email field, or provide format for a date. We are getting only a half of a possible functionality of an WSDL: method calls, exception handling, documentation and security but there is no way to specify data fromat.<br />
 I would like to have a WSLD that is as tight as possible, so that the client can call particular method and will exactly know what is possible and what is not allowed.<br />
 <br />
-Let's start with standard SOAP Service generated out of Java code. We will use Apache CXF and Spring Boot for it. Source code is here: https://github.com/maciejmiklas/apache-cxf-soap/tree/master/src/main/java/org/ast/apachecxfsoap/orginal<br />
-<br />
+Let's start with standard SOAP Service generated out of Java code. We will use Apache CXF and Spring Boot for it. Source code is here: https://github.com/maciejmiklas/apache-cxf-soap/tree/master/src/main/java/org/ast/apachecxfsoap/orginal
+
 It's a simple application, where users can submit registration as a SOAP Request on: http://localhost:8080/soap/Registration
 <br />
 This code outpost following WSDL: https://github.com/maciejmiklas/apache-cxf-soap/tree/master/wsdl/orginal.wsdl
 
 Now as you can see, there is not much about data types in this WSDL (lines 9-22). Email is just mandatory, date also, but there is no way to provide further assertions.<br />
-The problem lies in JAXB, it's just missing annotations to influence generated XML Schema.<br />
-There is a <a href="https://github.com/whummer/jaxb-facets">pull request (jaxb-facets) </a>that would solve this issue but it's already few years old and it does not look like it's going to be integrated any time soon.
+The problem lies in JAXB, it's just missing annotations to influence generated XML Schema. There is a <a href="https://github.com/whummer/jaxb-facets">pull request (jaxb-facets) </a>that would solve this issue but it's already few years old and it does not look like it's going to be integrated any time soon.
 The limitation is not caused by SOAP frameworks, but by the fact, that they are based on JAXB.<br />
 <br />
 This still does not change the fact, that I am not going to write WSLD by myself, there has to be a batter way!<br />
@@ -39,6 +39,5 @@ The original source code will be modified only it a few places:
 </ul>
 
 This is the modified source code:
-https://github.com/maciejmiklas/apache-cxf-soap/tree/master/src/main/java/org/ast/apachecxfsoap/extended
-And here is our final WSDL:
+https://github.com/maciejmiklas/apache-cxf-soap/tree/master/src/main/java/org/ast/apachecxfsoap/extended , and here is our final WSDL:
 https://github.com/maciejmiklas/apache-cxf-soap/tree/master/wsdl/extended.wsdl
