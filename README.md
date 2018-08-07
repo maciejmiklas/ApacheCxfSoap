@@ -13,12 +13,11 @@ Let's start with standard SOAP Service generated out of Java code. We will use A
 <br />
 It's a simple application, where users can submit registration as a SOAP Request on: http://localhost:8080/soap/Registration
 <br />
-This code outpost following WSDL:<br />
-https://github.com/maciejmiklas/apache-cxf-soap/tree/master/wsdl/orginal.wsdl
+This code outpost following WSDL: https://github.com/maciejmiklas/apache-cxf-soap/tree/master/wsdl/orginal.wsdl
+
 Now as you can see, there is not much about data types in this WSDL (lines 9-22). Email is just mandatory, date also, but there is no way to provide further assertions.<br />
 The problem lies in JAXB, it's just missing annotations to influence generated XML Schema.<br />
-There is a <a href="https://github.com/whummer/jaxb-facets">pull request (jaxb-facets) </a>that would solve this issue but it's already few years old and it does not look like it's going to be integrated any time soon.<br />
-<br />
+There is a <a href="https://github.com/whummer/jaxb-facets">pull request (jaxb-facets) </a>that would solve this issue but it's already few years old and it does not look like it's going to be integrated any time soon.
 The limitation is not caused by SOAP frameworks, but by the fact, that they are based on JAXB.<br />
 <br />
 This still does not change the fact, that I am not going to write WSLD by myself, there has to be a batter way!<br />
@@ -30,6 +29,7 @@ The implementation below has its limitations, you might run into some issues, it
 Now we are going to modify first example. The idea is to write XSD that defines simple types, reference those types in transfer classes, and on the end generate WSLD which combines it all.<br />
 For the beginning we have to write Schema that defines types for transfer objects:
 https://github.com/maciejmiklas/apache-cxf-soap/tree/master/src/main/resources/types.xsd
+
 The original source code will be modified only it a few places:
 <br />
 <ul>
@@ -37,6 +37,8 @@ The original source code will be modified only it a few places:
 <li>some fields in transfer objects are annotated with&nbsp;<i>@XmlSchemaType</i>&nbsp;- this annotations provides connection between Java types and types defined in XSD. For example&nbsp;<i>ExRegistration#email</i>&nbsp;is annotated with&nbsp;<i>@XmlSchemaType(name = "email")</i>, XSD contains&nbsp;<i>email</i>&nbsp;type, and finally&nbsp;<i>email</i>&nbsp;in generated in WSDL references type from provided Schema.,</li>
 <li>the classes following pattern <i>*Registration*</i> has been renamed to <i>*ExRegistration*</i></li>
 </ul>
+
+This is the modified source code:
 https://github.com/maciejmiklas/apache-cxf-soap/tree/master/src/main/java/org/ast/apachecxfsoap/extended
-Here is our final WSDL:
+And here is our final WSDL:
 https://github.com/maciejmiklas/apache-cxf-soap/tree/master/wsdl/extended.wsdl
