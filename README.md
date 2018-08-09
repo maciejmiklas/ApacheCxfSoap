@@ -34,7 +34,7 @@ The original source code will be modified only it a few places:
 <br />
 <ul>
 <li>we will replace default Apache CXF Data Binding with custom implementation. It reads Schama from file and integrates it into generated WSLD,</li>
-<li>some fields in transfer objects are annotated with&nbsp;<i>@XmlSchemaType</i>&nbsp;- this annotations provides connection between Java types and types defined in XSD. For example&nbsp;<i>ExRegistration#email</i>&nbsp;is annotated with&nbsp;<i>@XmlSchemaType(name = "email")</i>, XSD contains&nbsp;<i>email</i>&nbsp;type, and finally&nbsp;<i>email</i>&nbsp;in generated in WSDL references type from provided Schema.,</li>
+<li>some fields in transfer objects are annotated with&nbsp;<i>@XmlSchemaType</i>&nbsp;- this annotation provides connection between Java types and types defined in XSD. For example&nbsp;<i>ExRegistration#email</i>&nbsp;is annotated with&nbsp;<i>@XmlSchemaType(name = "email")</i>, XSD contains&nbsp;<i>email</i>&nbsp;type, and finally&nbsp;<i>email</i>&nbsp;in generated in WSDL references type from provided Schema,</li>
 <li>the classes following pattern <i>*Registration*</i> has been renamed to <i>*ExRegistration*</i></li>
 </ul>
 
